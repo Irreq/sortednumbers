@@ -1,0 +1,92 @@
+:root {
+  --color-fg: rgb(208, 198, 198);
+  --color-bg: #756b02;
+  --color-fg: rgb(200, 201, 178);
+    /* --color-bg: rgb(106, 105, 78); */
+    --color-bg: rgb(54, 54, 39);
+  
+}
+
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 110%;
+  overflow: hidden;
+  font-family: "Computer Modern Serif", serif;
+  color: var(--color-fg);
+  background-color: var(--color-bg);
+}
+
+.timeline-container {
+  position: relative;
+  width: 100%;
+  height: 110%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.timeline {
+  position: absolute;
+  left: 50%;
+  height: 100%;
+  width: 2px;
+  background-color: var(--color-fg);
+}
+
+.timeline-item {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  top: 0;
+  color: var(--color-fg);
+  transform: translateX(-50%);
+}
+
+.timeline-item .number {
+  font-size: 1.5em;
+  font-weight: bold;
+  position: absolute;
+  right: 30px;
+}
+
+.timeline-item .line {
+  width: 20px;
+  height: 2px;
+  background-color: var(--color-fg);
+}
+
+.timeline-item .about {
+  font-size: 1em;
+  white-space: nowrap;
+  position: absolute;
+  word-wrap: break-word;
+  width: 400px;
+    word-break: break-word;
+    white-space: normal;
+  left: 30px;
+}
+
+.timeline-item.hidden {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+#search-input {
+  position: relative;
+  text-align: center;
+  /* left: 15px;
+  top: 15px; */
+  border-radius: 8px;
+}
+
+.tools {
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  /* height: 100%; */
+}
+
