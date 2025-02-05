@@ -1,7 +1,12 @@
 import json
 import math
+import gzip
 
 numbers = []
+
+
+def package(number, symbol="", description="", area=None):
+    return {"n": number, "s": symbol, "d": description}
 
 
 def ordinal(n: int):
@@ -1032,70 +1037,56 @@ def primes():
         if i < max_n - 1:
             for k in range(some_primes[i] + 1, some_primes[i + 1]):
                 numbers.append(
-                    {
-                        "number": k,
-                        "symbol": "",
-                        "description": "\\( "
+                    package(
+                        k,
+                        description="\\( "
                         + "\\cdot".join([str(s) for s in factorize(k)])
                         + " \\)",
-                    }
+                    )
+                    # {
+                    #     "number": k,
+                    #     "symbol": "",
+                    #     "description": "\\( "
+                    #     + "\\cdot".join([str(s) for s in factorize(k)])
+                    #     + " \\)",
+                    # }
                 )
 
     for i, prime in enumerate(some_primes):
         numbers.append(
-            {"number": prime, "symbol": "", "description": f"{ordinal(i + 2)} Prime"}
+            package(prime, description=f"{ordinal(i + 2)} Prime")
+            # {"number": prime, "symbol": "", "description": f"{ordinal(i + 2)} Prime"}
         )
 
 
 def physics():
     numbers.extend(
         [
-            {
-                "number": 299792458,
-                "symbol": "\\( c \\)",
-                "description": "Speed of light in vacuum",
-            },
-            {
-                "number": 1.62607015e-34,
-                "symbol": "\\( h \\)",
-                "description": "A photon's energy is equal to its frequency multiplied by the Planck constant, and the wavelength of a matter wave equals the Planck constant divided by the associated particle momentum.",
-            },
-            {
-                "number": 1.25663706127e-6,
-                "symbol": "\\( \\mu_0 \\)",
-                "description": "Vacuum magnetic permeability \\( [N \\cdot A^{-2}] \\)",
-            },
-            {
-                "number": 8.8541878188e-12,
-                "symbol": "\\( \\epsilon_0\\)",
-                "description": "Vacuum electric permeability \\( [F \\cdot M^{-1}] \\)",
-            },
-            {
-                "number": 1.380649e-23,
-                "symbol": "\\( k_B\\)",
-                "description": "Boltzmann constant \\( [J \\cdot K^{-1}] \\)",
-            },
-            {
-                "number": 1.602176634e-19,
-                "symbol": "\\( e \\)",
-                "description": "Elementary charge [C]",
-                "area": "physics",
-            },
-            {
-                "number": 9.1093837139e-31,
-                "symbol": "\\( m_e \\)",
-                "description": "Electron mass [kg]",
-            },
-            {
-                "number": 1.67262192595e-27,
-                "symbol": "\\( m_p \\)",
-                "description": "Proton mass [kg]",
-            },
-            {
-                "number": 1.67492750056e-27,
-                "symbol": "\\( m_n \\)",
-                "description": "Neutron mass [kg]",
-            },
+            package(299792458, "\\( c \\)", "Speed of light in vacuum"),
+            package(
+                1.62607015e-34,
+                "\\( h \\)",
+                "A photon's energy is equal to its frequency multiplied by the Planck constant, and the wavelength of a matter wave equals the Planck constant divided by the associated particle momentum.",
+            ),
+            package(
+                1.25663706127e-6,
+                "\\( \\mu_0 \\)",
+                "Vacuum magnetic permeability \\( [N \\cdot A^{-2}] \\)",
+            ),
+            package(
+                8.8541878188e-12,
+                "\\( \\epsilon_0\\)",
+                "Vacuum electric permeability \\( [F \\cdot M^{-1}] \\)",
+            ),
+            package(
+                1.380649e-23,
+                "\\( k_B\\)",
+                "Boltzmann constant \\( [J \\cdot K^{-1}] \\)",
+            ),
+            package(1.602176634e-19, "\\( e \\)", "Elementary charge [C]"),
+            package(9.1093837139e-31, "\\( m_e \\)", "Electron mass [kg]"),
+            package(1.67262192595e-27, "\\( m_p \\)", "Proton mass [kg]"),
+            package(1.67492750056e-27, "\\( m_n \\)", "Neutron mass [kg]"),
         ]
     )
 
@@ -1123,150 +1114,145 @@ def esoteric():
             #     "symbol": "\\( \\infty \\)",
             #     "description": "",
             # },
-            {
-                "number": 1597463007,
-                "symbol": "0x5F3759DF",
-                "description": "Fast InvSqrt() or by the hexadecimal constant 0x5F3759DF, is an algorithm that estimates  \\( \\frac{1}{\\sqrt{x}} \\), the reciprocal (or multiplicative inverse) of the square root of a 32-bit floating-point number \\( x \\) in IEEE 754 floating-point format.",
-            },
-            {"number": 1e100, "symbol": "Gogol", "description": "Large number"},
+            # package(
+            #     1597463007,
+            #     symbol="0x5F3759DF",
+            #     description="Fast InvSqrt() or by the hexadecimal constant 0x5F3759DF, is an algorithm that estimates  \\( \\frac{1}{\\sqrt{x}} \\), the reciprocal (or multiplicative inverse) of the square root of a 32-bit floating-point number \\( x \\) in IEEE 754 floating-point format.",
+            # ),
+            # package(-1e200, symbol="\\( -\\infty \\)"),
+            # package(1e200, symbol="\\( \\infty \\)"),
+            package(1e100, symbol="Gogol", description="Large number"),
+            # {
+            #     "number": 1597463007,
+            #     "symbol": "0x5F3759DF",
+            #     "description": "Fast InvSqrt() or by the hexadecimal constant 0x5F3759DF, is an algorithm that estimates  \\( \\frac{1}{\\sqrt{x}} \\), the reciprocal (or multiplicative inverse) of the square root of a 32-bit floating-point number \\( x \\) in IEEE 754 floating-point format.",
+            # },
+            # {"number": 1e100, "symbol": "Gogol", "description": "Large number"},
         ]
     )
 
 
-def useful():
+def basic():
     numbers.extend(
         [
-            {
-                "number": -1,
-                "symbol": "",
-                "description": "Equal to \\( i^2 \\)",
-            },
-            {
-                "number": 0,
-                "symbol": "Zero",
-                "description": "",
-            },
-            {
-                "number": 1,
-                "symbol": "One",
-                "description": "",
-            },
-            {
-                "number": math.exp(1),
-                "symbol": "\\( e \\)",
-                "description": "Eulers number",
-            },
-            {
-                "number": math.log(2),
-                "symbol": "\\( ln(2) \\)",
-                "description": "Real root of \\( e^x = 2 \\)",
-            },
-            {
-                "number": math.pi,
-                "symbol": "\\( \\pi \\)",
-                "description": "Ratio of a circle's circumference to its diameter.",
-            },
-            {
-                "number": 2 * math.pi,
-                "symbol": "\\( \\tau \\)",
-                "description": "Equal to \\( 2\\pi \\)",
-            },
-            {
-                "number": (1 + math.sqrt(5)) / 2,
-                "symbol": "\\( \\phi \\)",
-                "description": "Golden ratio equal to \\( \\frac{1 + \\sqrt{5}}{2} \\)",
-            },
+            package(-1, "", "Equal to \\( i^2 \\)"),
+            package(0, "Zero", ""),
+            package(1, "One", ""),
+            package(math.exp(1), "\\( e \\)", "Euler's number"),
+            package(math.log(2), "\\( ln(2) \\)", "Real root of \\( e^x = 2 \\)"),
+            package(
+                math.pi,
+                "\\( \\pi \\)",
+                "Ratio of a circle's circumference to its diameter.",
+            ),
+            package(2 * math.pi, "\\( \\tau \\)", "Equal to \\( 2\\pi \\)"),
+            package(
+                (1 + math.sqrt(5)) / 2,
+                "\\( \\phi \\)",
+                "Golden ratio equal to \\( \\frac{1 + \\sqrt{5}}{2} \\)",
+            ),
         ]
     )
 
 
 def hexnumbers():
-    hex_nums = ["0xDEADBEEF"]
-    for h in hex_nums:
-        numbers.append({"number": eval(h), "symbol": h, "description": ""})
+    # src: https://en.wikipedia.org/wiki/Magic_number_(programming)
+    hex_nums = {
+        "00008123": "Used in MS Visual C++. Deleted pointers are set to this value, so they throw an exception, when they are used after; it is a more recognizable alias for the zero address. It is activated with the Security Development Lifecycle (/sdl) option.",
+        "FACADE": '"Facade", Used by a number of RTOSes',
+        "1BADB002": '"1 bad boot", Multiboot header magic number',
+        "8BADF00D": '"Ate bad food", Indicates that an Apple iOS application has been terminated because a watchdog timeout occurred.',
+        "A5A5A5A5": "Used in embedded development because the alternating bit pattern (1010 0101) creates an easily recognized pattern on oscilloscopes and logic analyzers. ",
+        "A5": """Used in FreeBSD's PHK malloc(3) for debugging when /etc/malloc.conf is symlinked to "-J" to initialize all newly allocated memory as this value is not a NULL pointer or ASCII NUL character.""",
+        "ABABABAB": """Used by Microsoft's debug HeapAlloc() to mark "no man's land" guard bytes after allocated heap memory.""",
+        "ABADBABE": """"A bad babe", Used by Apple as the "Boot Zero Block" magic number """,
+        "ABBABABE": """"ABBA babe", used by Driver Parallel Lines memory heap. """,
+        "ABADCAFE": """"A bad cafe", Used to initialize all unallocated memory (Mungwall, AmigaOS) """,
+        # "B16B00B5": """"Big Boobs", Formerly required by Microsoft's Hyper-V hypervisor to be used by Linux guests as the upper half of their "guest id""",
+        "BAADF00D": """"Bad food", Used by Microsoft's debug HeapAlloc() to mark uninitialized allocated heap memory""",
+        "BAAAAAAD": """"Baaaaaad", Indicates that the Apple iOS log is a stackshot of the entire system, not a crash report""",
+        "BAD22222": """"Bad too repeatedly", Indicates that an Apple iOS VoIP application has been terminated because it resumed too frequently.""",
+        "BADBADBADBAD": """"Bad bad bad bad", Burroughs large systems "uninitialized" memory (48-bit words) """,
+        "BADC0FFEE0DDF00D": """"Bad coffee odd food", Used on IBM RS/6000 64-bit systems to indicate uninitialized CPU registers""",
+        "BADDCAFE": """Bad cafe", On Sun Microsystems' Solaris, marks uninitialized kernel memory (KMEM_UNINITIALIZED_PATTERN) """,
+        "BBADBEEF": """"Bad beef", Used in WebKit, for particularly unrecoverable errors""",
+        "BEBEBEBE": """Used by AddressSanitizer to fill allocated but not initialized memory""",
+        "BEEFCACE": """"Beef cake", Used by Microsoft .NET as a magic number in resource files""",
+        "C00010FF": """"Cool off", Indicates Apple iOS app was killed by the operating system in response to a thermal event""",
+        "CAFEBABE": """"Cafe babe", Used by Java for class files""",
+        "CAFED00D": """"Cafe dude", Used by Java for their pack200 compression """,
+        "CAFEFEED": """"Cafe feed", Used by Sun Microsystems' Solaris debugging kernel to mark kmemfree() memory""",
+        "CCCCCCCC": """Used by Microsoft's C++ debugging runtime library and many DOS environments to mark uninitialized stack memory. CC is the opcode of the INT 3 debug breakpoint interrupt on x86 processors.""",
+        "CDCDCDCD": """Used by Microsoft's C/C++ debug malloc() function to mark uninitialized heap memory, usually returned from HeapAlloc()""",
+        "0D15EA5E": """"Zero Disease", Used as a flag to indicate regular boot on the GameCube and Wii consoles """,
+        "DDDDDDDD": "Used by MicroQuill's SmartHeap and Microsoft's C/C++ debug free() function to mark freed heap memory",
+        "DEAD10CC": """"Dead lock", Indicates that an Apple iOS application has been terminated because it held on to a system resource while running in the background""",
+        "DEADBABE": """"Dead babe", Used at the start of Silicon Graphics' IRIX arena files """,
+        "DEADBEEF": """"Dead beef", Famously used on IBM systems such as the RS/6000, also used in the classic Mac OS operating systems, OPENSTEP Enterprise, and the Commodore Amiga. On Sun Microsystems' Solaris, marks freed kernel memory (KMEM_FREE_PATTERN) """,
+        "DEADCAFE": """"Dead cafe", Used by Microsoft .NET as an error number in DLLs""",
+        "DEADC0DE": """"Dead code", Used as a marker in OpenWRT firmware to signify the beginning of the to-be created jffs2 file system at the end of the static firmware""",
+        "DEADFA11": """"Dead fail", Indicates that an Apple iOS application has been force quit by the user""",
+        "DEADF00D": """"Dead food", Used by Mungwall on the Commodore Amiga to mark allocated but uninitialized memory""",
+        "DEFEC8ED": """"Defecated", Used for OpenSolaris core dumps""",
+        "DEADDEAD": '"Dead Dead" indicates that the user deliberately initiated a crash dump from either the kernel debugger or the keyboard under Microsoft Windows.',
+        "D00D2BAD": '"Dude, Too Bad", Used by Safari crashes on macOS Big Sur.',
+        "D00DF33D": '"Dude feed", Used by the devicetree to mark the start of headers.',
+        "EBEBEBEB": "From MicroQuill's SmartHeap ",
+        "FADEDEAD": '"Fade dead", Comes at the end to identify every AppleScript script ',
+        "FDFDFDFD": """Used by Microsoft's C/C++ debug malloc() function to mark "no man's land" guard bytes before and after allocated heap memory,[26] and some debug Secure C-Runtime functions implemented by Microsoft (e.g. strncat_s)""",
+        "FEE1DEAD": '"Feel dead", Used by Linux reboot() syscall',
+        "FEEDFACE": """"Feed face", Seen in PowerPC Mach-O binaries on Apple Inc.'s Mac OSX platform. On Sun Microsystems' Solaris, marks the red zone (KMEM_REDZONE_PATTERN)""",
+        "FEEEFEEE": """"Fee fee", Used by Microsoft's debug HeapFree() to mark freed heap memory. Some nearby internal bookkeeping values may have the high word set to FEEE as well.""",
+        "5F3759DF": "Fast InvSqrt() or by the hexadecimal constant 0x5F3759DF, is an algorithm that estimates  \\( \\frac{1}{\\sqrt{x}} \\), the reciprocal (or multiplicative inverse) of the square root of a 32-bit floating-point number \\( x \\) in IEEE 754 floating-point format.",
+    }
+    for code, desc in hex_nums.items():
+        h = "0x" + code
+        numbers.append(package(eval(h), symbol=h, description=desc))
 
 
-def arithm():
-    numbers.extend(
-        [
-            {
-                "number": 18446744073709551615,
-                "symbol": "0xFFFF_FFFF_FFFF_FFFF",
-                "description": "The maximum unsigned 64 bit value \\( (2^{64} − 1) \\)",
-            },
-            {
-                "number": 9223372036854775807,
-                "symbol": "0x7FFF_FFFF_FFFF_FFFF",
-                "description": "The maximum signed 64 bit value \\( (2^{63} − 1) \\)",
-            },
-            {
-                "number": 4294967295,
-                "symbol": "0xFFFF_FFFF",
-                "description": "The maximum unsigned 32 bit value \\( (2^{32} − 1) \\)",
-            },
-            {
-                "number": 2147483647,
-                "symbol": "0x7FFF_FFFF",
-                "description": "The maximum signed 32 bit value \\( (2^{31} − 1) \\)",
-            },
-            {
-                "number": 65535,
-                "symbol": "0xFFFF",
-                "description": "The maximum unsigned 16 bit value \\( (2^{16} − 1) \\)",
-            },
-            {
-                "number": 32767,
-                "symbol": "0x7FFF",
-                "description": "The maximum signed 16 bit value \\( (2^{15} − 1) \\)",
-            },
-            {
-                "number": 255,
-                "symbol": "0xFF",
-                "description": "The maximum unsigned 8 bit value \\( (2^{8} − 1) \\)",
-            },
-            {
-                "number": 127,
-                "symbol": "0x7F",
-                "description": "The maximum signed 16 bit value \\( (2^{7} − 1) \\)",
-            },
-            {
-                "number": -128,
-                "symbol": "0x80",
-                "description": "The minimum signed 8 bit value",
-            },
-            {
-                "number": -32768,
-                "symbol": "0x8000",
-                "description": "The minimum signed 16 bit value",
-            },
-            {
-                "number": -2147483648,
-                "symbol": "0x8000_0000",
-                "description": "The minimum signed 32 bit value",
-            },
-            {
-                "number": -9223372036854775808,
-                "symbol": "0x8000_0000_0000_0000",
-                "description": "The minimum signed 64 bit value",
-            },
-        ]
-    )
+def bits():
+    special = [8, 16, 32, 64, 128]
+    for i in special:
+        unsigned_max = 2**i - 1
+        signed_min = -(2 ** (i - 1))
+        signed_max = 2 ** (i - 1) - 1
+
+        numbers.extend(
+            [
+                package(
+                    unsigned_max,
+                    symbol=hex(unsigned_max).upper().replace("X", "x"),
+                    description=f"The maximum unsigned {i} bit value \\( (2^"
+                    "{" + str(i) + "} - 1)\\)",
+                ),
+                package(
+                    signed_max,
+                    symbol=hex(signed_max).upper().replace("X", "x"),
+                    description=f"The maximum signed {i} bit value \\( (2^"
+                    "{" + str(i - 1) + "} - 1)\\)",
+                ),
+                package(
+                    signed_min,
+                    symbol=hex(-signed_min).upper().replace("X", "x"),
+                    description=f"The minimum signed {i} bit value ",
+                ),
+            ]
+        )
 
 
 def roots():
     for i in range(2, 100):
-        if i in [4, 9, 16, 32, 49, 64]:
+        if (i**0.5) % 1 == 0:
             continue
         numbers.append(
-            {
-                "number": i**0.5,
-                "symbol": "",
-                "description": "\\( + \\sqrt{" + str(i) + "} \\) ",
-            }
+            package(
+                i**0.5,
+                description="\\( + \\sqrt{" + str(i) + "} \\) ",
+            )
         )
 
 
-def base10(powers=range(-24, 40)):
+def base10(powers=range(-24, 100)):
     si = {
         "-24": "yocto",
         "-21": "zepto",
@@ -1295,48 +1281,23 @@ def base10(powers=range(-24, 40)):
             continue
         prefix = si.get(str(power), "")
         numbers.append(
-            {
-                "number": 10**power,
-                "symbol": "",
-                "description": "\\( 10^{" + str(power) + "} \\) " + prefix,
-            }
+            package(
+                10**power,
+                description="\\( 10^{" + str(power) + "} \\) " + prefix,
+            )
         )
 
 
-def base2(powers=range(-10, 40)):
+def base2(powers=range(-128, 128)):
     for power in powers:
         if power in [0]:
             continue
         frac = "" or (" = \\frac{1}{" + str(2 ** abs(power)) + "}") * (power < 0)
         numbers.append(
-            {
-                "number": 2**power,
-                "symbol": "",
-                "description": "\\( 2^{" + str(power) + "} " + frac + " \\)",
-            }
-        )
-
-
-def factors():
-    def factorize(number):
-        factors = []
-        divisor = 2
-        while number > 1:
-            while number % divisor == 0:
-                factors.append(divisor)
-                number //= divisor
-            divisor += 1
-        return factors
-
-    for i in range(10, 100):
-        numbers.append(
-            {
-                "number": i,
-                "symbol": "",
-                "description": "\\( "
-                + "\\cdot".join([str(k) for k in factorize(i)])
-                + " \\)",
-            }
+            package(
+                2**power,
+                description="\\( 2^{" + str(power) + "} " + frac + " \\)",
+            )
         )
 
 
@@ -1345,11 +1306,10 @@ def fractions():
         if i in [2, 4, 8, 10, 16]:
             continue
         numbers.append(
-            {
-                "number": 1.0 / i,
-                "symbol": "",
-                "description": "\\( \\frac{1}{" + str(i) + "} \\)",
-            }
+            package(
+                1.0 / i,
+                description="\\( \\frac{1}{" + str(i) + "} \\)",
+            )
         )
 
     storage = {}
@@ -1369,16 +1329,26 @@ def fractions():
                 storage[val] = "\\( \\frac{" + str(i) + "}{" + str(j) + "}"
 
     for val, desc in storage.items():
-        numbers.append({"number": val, "symbol": "", "description": desc + "\\)"})
+        numbers.append(package(val, description=desc + "\\)"))
 
 
-functions = [primes, base10, base2]
-functions.extend([hexnumbers, arithm, physics, esoteric, useful, fractions, roots])
+functions = [
+    primes,
+    fractions,
+    roots,
+    base10,
+    base2,
+    hexnumbers,
+    bits,
+    physics,
+    esoteric,
+    basic,
+]
 
 if __name__ == "__main__":
 
     for f in functions:
         f()
 
-    with open("numbers.json", "w", encoding="utf-8") as f:
-        json.dump(numbers, f, ensure_ascii=False, indent=4)
+    with gzip.open("numbers.json.gz", "wt", encoding="utf-8") as f:
+        json.dump(numbers, f, separators=(",", ":"))

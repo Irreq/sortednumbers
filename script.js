@@ -1,6 +1,6 @@
 let timelineData = []; // Declare the timelineData variable
 
-const maxVisibleItems = 8;
+const maxVisibleItems = 9;
 
 const container = document.querySelector(".timeline-container");
 const timeline = document.querySelector(".timeline");
@@ -62,14 +62,14 @@ function renderTimeline() {
     }
 
     const data = timelineData[i];
-    const symbol = data.symbol || ""; // Fallback if symbol is undefined
+    // const symbol = data.symbol || ""; // Fallback if symbol is undefined
 
     timelineItem.innerHTML = `
-            <div class="number">${data.number}</div>
+            <div class="number">${data.n}</div>
             <div class="line"></div>
             <div class="about">
-              <h2>${symbol}</h2>
-              <p>${data.description}</p>
+              <h2>${data.s}</h2>
+              <p>${data.d}</p>
             </div>
         `;
 
@@ -134,14 +134,34 @@ function filterNumbers() {
   renderTimeline();
 }
 
+async function fetchAndDecompressJSON(url) {
+  try {
+    // Fetch the gzipped JSON file
+    let response = await fetch(url);
+    let compressedData = await response.arrayBuffer(); // Get raw compressed data
+
+    // Decompress using Pako
+    let decompressedData = pako.ungzip(new Uint8Array(compressedData), { to: "string" });
+
+    // Parse JSON
+    let jsonData = JSON.parse(decompressedData);
+    console.log(jsonData); // Use the data
+
+    return jsonData;
+  } catch (error) {
+    console.error("Error fetching or decompressing JSON:", error);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   // Fetch the JSON file
-  fetch("numbers.json") // Ensure the path is correct based on the file structure
-    .then((response) => response.json())
+  // fetch("numbers.json") // Ensure the path is correct based on the file structure
+  // .then((response) => response.json())
+  fetchAndDecompressJSON("numbers.json.gz")
     .then((data) => {
-      data.sort((a, b) => a.number - b.number);
-      searchNumbers = data.map((item) => item.number);
-      scrollPosition = findClosestIndex(searchNumbers, 1) * 100;
+      data.sort((a, b) => a.n - b.n);
+      searchNumbers = data.map((item) => item.n);
+      scrollPosition = findClosestIndex(searchNumbers, -111) * 100;
       timelineData = data; // Store the fetched JSON data in timelineData
       console.log(timelineData); // Check the data in the console
       renderTimeline(); // Call the function to render the timeline
